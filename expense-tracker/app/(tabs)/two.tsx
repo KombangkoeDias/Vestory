@@ -100,6 +100,7 @@ export default function TransactionsScreen() {
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.chips}
+        style={styles.chipsScroll}
       >
         <TouchableOpacity
           style={[styles.chip, activeCategory === 'all' && styles.chipActive]}
@@ -216,10 +217,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: Colors.dark.textPrimary,
   },
+  chipsScroll: {
+    flexGrow: 0,
+    flexShrink: 0,
+    marginBottom: 4,
+  },
   chips: {
     paddingHorizontal: 16,
-    paddingBottom: 16,
-    paddingTop: 4,
+    paddingVertical: 8,
     gap: 8,
     alignItems: 'center',
   },
