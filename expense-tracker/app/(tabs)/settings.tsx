@@ -6,10 +6,12 @@ import {
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import Colors from '../../constants/Colors';
+import { useDatabase } from '../../context/DatabaseContext';
 
 interface SettingRowProps {
   icon: string;
@@ -48,6 +50,23 @@ const SUPPORTED_BANKS = [
 ];
 
 export default function SettingsScreen() {
+  const { wipeAllData } = useDatabase();
+
+  function handleClearData() {
+    Alert.alert(
+      'Clear All Data',
+      'This will permanently delete all transactions. This cannot be undone.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete Everything',
+          style: 'destructive',
+          onPress: wipeAllData,
+        },
+      ],
+    );
+  }
+
   return (
     <SafeAreaView style={styles.safe}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -169,6 +188,7 @@ export default function SettingsScreen() {
               iconColor={Colors.dark.error}
               label="Clear All Data"
               showArrow={false}
+              onPress={handleClearData}
             />
           </View>
         </View>

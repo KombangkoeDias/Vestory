@@ -6,11 +6,12 @@ import {
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import Colors from '../../constants/Colors';
-import { MOCK_TRANSACTIONS, MOCK_TRANSACTIONS_APRIL } from '../../constants/MockData';
+import { useDatabase } from '../../context/DatabaseContext';
 import MonthSelector from '../../components/MonthSelector';
 import CategoryBar from '../../components/CategoryBar';
 import SpendingChart from '../../components/SpendingChart';
@@ -22,20 +23,27 @@ import {
   formatCurrency,
 } from '../../utils/transactions';
 
-const ALL_TRANSACTIONS = [...MOCK_TRANSACTIONS, ...MOCK_TRANSACTIONS_APRIL];
-
 export default function DashboardScreen() {
+  const { transactions, isLoading } = useDatabase();
   const [yearMonth, setYearMonth] = useState(getTodayYearMonth());
 
   const summary = useMemo(
-    () => computeMonthSummary(ALL_TRANSACTIONS, yearMonth),
-    [yearMonth]
+    () => computeMonthSummary(transactions, yearMonth),
+    [transactions, yearMonth]
   );
 
   const recentTransactions = useMemo(
-    () => filterByMonth(ALL_TRANSACTIONS, yearMonth).slice(0, 5),
-    [yearMonth]
+    () => filterByMonth(transactions, yearMonth).slice(0, 5),
+    [transactions, yearMonth]
   );
+
+  if (isLoading) {
+    return (
+      <SafeAreaView style={[styles.safe, { alignItems: 'center', justifyContent: 'center' }]}>
+        <ActivityIndicator color={Colors.dark.primary} size="large" />
+      </SafeAreaView>
+    );
+  }
 
   const maxCategoryAmount = summary.byCategory[0]?.total ?? 1;
   const isCurrentMonth = yearMonth === getTodayYearMonth();
