@@ -87,7 +87,7 @@ export default function SettingsScreen() {
           </View>
           <Text style={styles.connectTitle}>Connect Gmail</Text>
           <Text style={styles.connectText}>
-            Grant read-only access to scan bank notification emails. Your emails never leave your device.
+            Grant read-only access so Vestory can scan bank notification emails. Your emails never leave your device.
           </Text>
           <TouchableOpacity style={styles.connectBtn}>
             <Ionicons name="logo-google" size={16} color="#FFFFFF" style={{ marginRight: 8 }} />

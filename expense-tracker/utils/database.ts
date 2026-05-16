@@ -1,7 +1,7 @@
 import * as SQLite from 'expo-sqlite';
 import { Transaction, CategoryId } from '../types';
 
-const DB_NAME = 'pars.db';
+const DB_NAME = 'vestory.db';
 
 let db: SQLite.SQLiteDatabase | null = null;
 

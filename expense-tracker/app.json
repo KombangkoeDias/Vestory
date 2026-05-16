@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Pars",
-    "slug": "pars-expense-tracker",
+    "name": "Vestory",
+    "slug": "vestory",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",

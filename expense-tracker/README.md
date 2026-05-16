@@ -1,4 +1,4 @@
-# Pars — Expense Tracker
+# Vestory — Expense Tracker
 
 A privacy-first expense tracker that reads bank notification emails and parses them on-device. Nothing leaves your phone.
 

@@ -61,7 +61,7 @@ export default function DashboardScreen() {
         {/* Header */}
         <View style={styles.header}>
           <View>
-            <Text style={styles.appName}>Pars</Text>
+            <Text style={styles.appName}>Vestory</Text>
             <Text style={styles.subtitle}>Expense Tracker</Text>
           </View>
           <TouchableOpacity style={styles.notifBtn}>
