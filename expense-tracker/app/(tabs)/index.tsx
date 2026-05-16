@@ -37,15 +37,6 @@ export default function DashboardScreen() {
     [transactions, yearMonth]
   );
 
-  if (isLoading) {
-    return (
-      <SafeAreaView style={[styles.safe, { alignItems: 'center', justifyContent: 'center' }]}>
-        <ActivityIndicator color={Colors.dark.primary} size="large" />
-      </SafeAreaView>
-    );
-  }
-
-  const maxCategoryAmount = summary.byCategory[0]?.total ?? 1;
   const isCurrentMonth = yearMonth === getTodayYearMonth();
 
   const dailyAvg = useMemo(() => {
@@ -53,6 +44,16 @@ export default function DashboardScreen() {
     const daysElapsed = isCurrentMonth ? today : summary.dailyTotals.length;
     return daysElapsed > 0 ? summary.total / daysElapsed : 0;
   }, [summary, isCurrentMonth]);
+
+  const maxCategoryAmount = summary.byCategory[0]?.total ?? 1;
+
+  if (isLoading) {
+    return (
+      <SafeAreaView style={[styles.safe, { alignItems: 'center', justifyContent: 'center' }]}>
+        <ActivityIndicator color={Colors.dark.primary} size="large" />
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.safe}>
