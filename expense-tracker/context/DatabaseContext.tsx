@@ -5,9 +5,11 @@ import {
   getAllTransactions,
   updateTransactionCategory,
   deleteTransaction,
+  seedWithMockData,
   clearAllData,
   insertTransaction,
 } from '../utils/database';
+import { MOCK_TRANSACTIONS, MOCK_TRANSACTIONS_APRIL } from '../constants/MockData';
 import { CategoryId } from '../types';
 
 interface DatabaseContextValue {
@@ -29,6 +31,7 @@ export function DatabaseProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     (async () => {
       await initDatabase();
+      await seedWithMockData([...MOCK_TRANSACTIONS, ...MOCK_TRANSACTIONS_APRIL]);
       await loadTransactions();
       setIsLoading(false);
     })();
