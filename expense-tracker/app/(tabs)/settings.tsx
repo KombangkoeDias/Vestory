@@ -6,10 +6,12 @@ import {
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import Colors from '../../constants/Colors';
+import { useDatabase } from '../../context/DatabaseContext';
 
 interface SettingRowProps {
   icon: string;
@@ -48,6 +50,23 @@ const SUPPORTED_BANKS = [
 ];
 
 export default function SettingsScreen() {
+  const { wipeAllData } = useDatabase();
+
+  function handleClearData() {
+    Alert.alert(
+      'Clear All Data',
+      'This will permanently delete all transactions. This cannot be undone.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete Everything',
+          style: 'destructive',
+          onPress: wipeAllData,
+        },
+      ],
+    );
+  }
+
   return (
     <SafeAreaView style={styles.safe}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -68,7 +87,7 @@ export default function SettingsScreen() {
           </View>
           <Text style={styles.connectTitle}>Connect Gmail</Text>
           <Text style={styles.connectText}>
-            Grant read-only access to scan bank notification emails. Your emails never leave your device.
+            Grant read-only access so Vestory can scan bank notification emails. Your emails never leave your device.
           </Text>
           <TouchableOpacity style={styles.connectBtn}>
             <Ionicons name="logo-google" size={16} color="#FFFFFF" style={{ marginRight: 8 }} />
@@ -169,6 +188,7 @@ export default function SettingsScreen() {
               iconColor={Colors.dark.error}
               label="Clear All Data"
               showArrow={false}
+              onPress={handleClearData}
             />
           </View>
         </View>

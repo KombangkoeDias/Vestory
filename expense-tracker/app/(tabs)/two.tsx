@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../../constants/Colors';
-import { MOCK_TRANSACTIONS, MOCK_TRANSACTIONS_APRIL } from '../../constants/MockData';
+import { useDatabase } from '../../context/DatabaseContext';
 import { CATEGORY_LIST } from '../../constants/Categories';
 import { CategoryId } from '../../types';
 import TransactionItem from '../../components/TransactionItem';
@@ -25,15 +25,14 @@ import {
   getMonthLabel,
 } from '../../utils/transactions';
 
-const ALL_TRANSACTIONS = [...MOCK_TRANSACTIONS, ...MOCK_TRANSACTIONS_APRIL];
-
 export default function TransactionsScreen() {
+  const { transactions } = useDatabase();
   const [search, setSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState<CategoryId | 'all'>('all');
   const [yearMonth, setYearMonth] = useState(getTodayYearMonth());
 
   const filtered = useMemo(() => {
-    let txns = filterByMonth(ALL_TRANSACTIONS, yearMonth);
+    let txns = filterByMonth(transactions, yearMonth);
     if (activeCategory !== 'all') {
       txns = txns.filter(t => t.category === activeCategory);
     }
@@ -100,6 +99,7 @@ export default function TransactionsScreen() {
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.chips}
+        style={styles.chipsScroll}
       >
         <TouchableOpacity
           style={[styles.chip, activeCategory === 'all' && styles.chipActive]}
@@ -216,10 +216,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: Colors.dark.textPrimary,
   },
+  chipsScroll: {
+    flexGrow: 0,
+    flexShrink: 0,
+    marginBottom: 4,
+  },
   chips: {
     paddingHorizontal: 16,
-    paddingBottom: 16,
-    paddingTop: 4,
+    paddingVertical: 8,
     gap: 8,
     alignItems: 'center',
   },

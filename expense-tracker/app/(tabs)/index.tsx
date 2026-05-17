@@ -6,11 +6,12 @@ import {
   ScrollView,
   SafeAreaView,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import Colors from '../../constants/Colors';
-import { MOCK_TRANSACTIONS, MOCK_TRANSACTIONS_APRIL } from '../../constants/MockData';
+import { useDatabase } from '../../context/DatabaseContext';
 import MonthSelector from '../../components/MonthSelector';
 import CategoryBar from '../../components/CategoryBar';
 import SpendingChart from '../../components/SpendingChart';
@@ -22,22 +23,20 @@ import {
   formatCurrency,
 } from '../../utils/transactions';
 
-const ALL_TRANSACTIONS = [...MOCK_TRANSACTIONS, ...MOCK_TRANSACTIONS_APRIL];
-
 export default function DashboardScreen() {
+  const { transactions, isLoading } = useDatabase();
   const [yearMonth, setYearMonth] = useState(getTodayYearMonth());
 
   const summary = useMemo(
-    () => computeMonthSummary(ALL_TRANSACTIONS, yearMonth),
-    [yearMonth]
+    () => computeMonthSummary(transactions, yearMonth),
+    [transactions, yearMonth]
   );
 
   const recentTransactions = useMemo(
-    () => filterByMonth(ALL_TRANSACTIONS, yearMonth).slice(0, 5),
-    [yearMonth]
+    () => filterByMonth(transactions, yearMonth).slice(0, 5),
+    [transactions, yearMonth]
   );
 
-  const maxCategoryAmount = summary.byCategory[0]?.total ?? 1;
   const isCurrentMonth = yearMonth === getTodayYearMonth();
 
   const dailyAvg = useMemo(() => {
@@ -46,13 +45,23 @@ export default function DashboardScreen() {
     return daysElapsed > 0 ? summary.total / daysElapsed : 0;
   }, [summary, isCurrentMonth]);
 
+  const maxCategoryAmount = summary.byCategory[0]?.total ?? 1;
+
+  if (isLoading) {
+    return (
+      <SafeAreaView style={[styles.safe, { alignItems: 'center', justifyContent: 'center' }]}>
+        <ActivityIndicator color={Colors.dark.primary} size="large" />
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.safe}>
       <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
         {/* Header */}
         <View style={styles.header}>
           <View>
-            <Text style={styles.appName}>Pars</Text>
+            <Text style={styles.appName}>Vestory</Text>
             <Text style={styles.subtitle}>Expense Tracker</Text>
           </View>
           <TouchableOpacity style={styles.notifBtn}>
