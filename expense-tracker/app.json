@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "expensetracker",
+    "scheme": ["vestory", "com.googleusercontent.apps.212254724075-anl962rlu88nugph3bnkclpv1i0iss6t"],
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
@@ -14,7 +14,8 @@
       "backgroundColor": "#0F0F14"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.vestory.app"
     },
     "android": {
       "adaptiveIcon": {
@@ -31,7 +32,9 @@
     },
     "plugins": [
       "expo-router",
-      "expo-sqlite"
+      "expo-sqlite",
+      "expo-secure-store",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true
