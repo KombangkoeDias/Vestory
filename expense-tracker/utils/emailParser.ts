@@ -68,9 +68,14 @@ function extractDate(text: string): string | null {
   let m = text.match(/\b(\d{4})-(\d{2})-(\d{2})\b/);
   if (m) return `${m[1]}-${m[2]}-${m[3]}`;
 
-  // DD/MM/YYYY or DD-MM-YYYY
-  m = text.match(/\b(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})\b/);
+  // DD/MM/YYYY or DD-MM-YYYY (4-digit year — must match exactly 4 digits)
+  m = text.match(/\b(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})(?!\d)\b/);
   if (m) return `${m[3]}-${padTwo(m[2])}-${padTwo(m[1])}`;
+
+  // DD/MM/YY (2-digit year — checked immediately after 4-digit to avoid ambiguity)
+  // Uses (?!\d) to ensure the 2-digit year is not part of a longer number
+  m = text.match(/\b(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2})(?!\d)\b/);
+  if (m) return `20${m[3]}-${padTwo(m[2])}-${padTwo(m[1])}`;
 
   // DD MMM YYYY — "16 May 2026" or "16-May-2026"
   m = text.match(/\b(\d{1,2})[\s\-]([A-Za-z]{3,9})[\s\-](\d{4})\b/);
@@ -85,10 +90,6 @@ function extractDate(text: string): string | null {
     const mon = MONTHS[m[1].toLowerCase().slice(0, 3)];
     if (mon) return `${m[3]}-${mon}-${padTwo(m[2])}`;
   }
-
-  // DD/MM/YY
-  m = text.match(/\b(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2})\b/);
-  if (m) return `20${m[3]}-${padTwo(m[2])}-${padTwo(m[1])}`;
 
   // Fallback: today's date
   const today = new Date();

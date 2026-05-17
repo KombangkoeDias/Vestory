@@ -13,10 +13,8 @@ export const BANK_CONFIGS: BankConfig[] = [
     name: 'DBS / POSB',
     country: 'SG',
     senderAddresses: [
-      'donotreply@dbs.com',
-      'dbs@dbs.com',
-      'posb@posb.com.sg',
-      'dbsalerts@dbs.com',
+      '@dbs.com',
+      '@posb.com.sg',
     ],
     subjectKeywords: ['dbs', 'posb', 'transaction', 'card alert'],
   },
@@ -24,69 +22,48 @@ export const BANK_CONFIGS: BankConfig[] = [
     name: 'UOB',
     country: 'SG',
     senderAddresses: [
-      'uob@uob.com.sg',
-      'donotreply@uob.com.sg',
-      'alerts@uob.com.sg',
-      'notification@uob.com.sg',
+      // Confirmed real sender (unialerts@uobgroup.com)
+      'unialerts@uobgroup.com',
+      // Domain-level fallbacks — catches any address @uobgroup.com or @uob.com.sg
+      '@uobgroup.com',
+      '@uob.com.sg',
     ],
     subjectKeywords: ['uob', 'transaction', 'card', 'alert'],
   },
   {
     name: 'OCBC',
     country: 'SG',
-    senderAddresses: [
-      'ocbc@ocbc.com',
-      'alerts@ocbc.com',
-      'donotreply@ocbc.com',
-    ],
+    senderAddresses: ['@ocbc.com'],
     subjectKeywords: ['ocbc', 'transaction', 'card alert'],
   },
   {
     name: 'Maybank',
     country: 'SG',
-    senderAddresses: [
-      'maybank2u@maybank.com.sg',
-      'alerts@maybank.com.sg',
-      'donotreply@maybank.com.sg',
-    ],
+    senderAddresses: ['@maybank.com.sg', '@maybank.com'],
     subjectKeywords: ['maybank', 'transaction', 'card'],
   },
   {
     name: 'Citibank',
     country: 'SG',
-    senderAddresses: [
-      'citibank@email.citibank.com.sg',
-      'alerts@citibank.com.sg',
-    ],
+    senderAddresses: ['@citibank.com.sg', '@citi.com'],
     subjectKeywords: ['citi', 'transaction', 'card alert'],
   },
   {
     name: 'Krungthai Bank (KTB)',
     country: 'TH',
-    senderAddresses: [
-      'alert@ktb.co.th',
-      'noreply@ktb.co.th',
-      'notification@ktb.co.th',
-    ],
+    senderAddresses: ['@ktb.co.th', '@krungthai.com'],
     subjectKeywords: ['krungthai', 'ktb', 'การทำรายการ', 'transaction'],
   },
   {
     name: 'Bangkok Bank',
     country: 'TH',
-    senderAddresses: [
-      'alert@bangkokbank.com',
-      'noreply@bangkokbank.com',
-    ],
+    senderAddresses: ['@bangkokbank.com'],
     subjectKeywords: ['bangkok bank', 'bbl', 'transaction'],
   },
   {
     name: 'Kasikorn Bank (KBank)',
     country: 'TH',
-    senderAddresses: [
-      'kbank@kasikornbank.com',
-      'alert@kasikornbank.com',
-      'noreply@kasikornbank.com',
-    ],
+    senderAddresses: ['@kasikornbank.com'],
     subjectKeywords: ['kasikorn', 'kbank', 'transaction'],
   },
 ];

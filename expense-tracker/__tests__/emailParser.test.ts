@@ -1,5 +1,6 @@
 import { parseEmail } from '../utils/emailParser';
 import { categoriseMerchant } from '../utils/merchantCategoriser';
+import { isKnownBankSender } from '../constants/BankSenders';
 
 // ---------------------------------------------------------------------------
 // Sample bank email bodies (realistic templates)
@@ -46,6 +47,13 @@ const OCBC_CREDIT = {
 const MAYBANK_PURCHASE = {
   subject: 'Maybank Card Alert',
   body: `Transaction Alert: SGD 23.40 has been charged to your Maybank card ending 3456 at WATSONS SINGAPORE on 2026-05-13.`,
+};
+
+// Real UOB email confirmed by user
+const UOB_REAL = {
+  subject: 'UOB - Transaction Alert',
+  from: 'unialerts@uobgroup.com',
+  body: `A transaction of SGD 1.28 was made with your UOB Card ending 0835 on 16/05/26 at BUS/MRT. If unauthorised, call 24/7 Fraud Hotline now`,
 };
 
 const USD_PURCHASE = {
@@ -145,6 +153,26 @@ describe('emailParser — transaction type', () => {
   });
 });
 
+describe('emailParser — real UOB email (DD/MM/YY date, BUS/MRT merchant)', () => {
+  test('extracts amount', () => {
+    expect(parseEmail(UOB_REAL.subject, UOB_REAL.body).amount).toBe(1.28);
+  });
+  test('extracts currency', () => {
+    expect(parseEmail(UOB_REAL.subject, UOB_REAL.body).currency).toBe('SGD');
+  });
+  test('parses 2-digit year date DD/MM/YY → YYYY-MM-DD', () => {
+    expect(parseEmail(UOB_REAL.subject, UOB_REAL.body).date).toBe('2026-05-16');
+  });
+  test('extracts BUS/MRT merchant', () => {
+    const r = parseEmail(UOB_REAL.subject, UOB_REAL.body);
+    expect(r.merchant).toBeTruthy();
+    expect(r.merchant!.toUpperCase()).toContain('BUS');
+  });
+  test('confidence is high', () => {
+    expect(parseEmail(UOB_REAL.subject, UOB_REAL.body).confidence).toBe('high');
+  });
+});
+
 describe('emailParser — confidence scoring', () => {
   test('high confidence when all fields extracted', () => {
     expect(parseEmail(DBS_PURCHASE.subject, DBS_PURCHASE.body).confidence).toBe('high');
@@ -158,6 +186,21 @@ describe('emailParser — confidence scoring', () => {
 // ---------------------------------------------------------------------------
 // Merchant categoriser tests
 // ---------------------------------------------------------------------------
+
+describe('isKnownBankSender', () => {
+  test('recognises real UOB sender unialerts@uobgroup.com', () => {
+    expect(isKnownBankSender('unialerts@uobgroup.com')).toBe(true);
+  });
+  test('recognises any @uobgroup.com address', () => {
+    expect(isKnownBankSender('alerts@uobgroup.com')).toBe(true);
+  });
+  test('recognises @dbs.com address', () => {
+    expect(isKnownBankSender('donotreply@dbs.com')).toBe(true);
+  });
+  test('rejects unknown sender', () => {
+    expect(isKnownBankSender('noreply@somestore.com')).toBe(false);
+  });
+});
 
 describe('merchantCategoriser', () => {
   test('Grab Food → food', () => expect(categoriseMerchant('GRAB FOOD')).toBe('food'));
